@@ -1,0 +1,8 @@
+{
+  "name": "WAQAS ZIP TO WEB",
+  "description": "Upload ZIP. Build Website. Get Live Link. Automated ZIP-to-live-website hosting platform supporting HTML/CSS/JS, React, Vite, Next.js, Node.js, Python, and Docker.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

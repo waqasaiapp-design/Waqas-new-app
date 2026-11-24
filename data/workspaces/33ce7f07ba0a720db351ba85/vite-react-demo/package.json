@@ -1,0 +1,1 @@
+{"name":"vite-react-demo","private":true,"version":"1.0.0","type":"module","scripts":{"build":"vite build"},"dependencies":{"react":"^19.0.1","react-dom":"^19.0.1"},"devDependencies":{"@vitejs/plugin-react":"^6.1.1","vite":"^8.3.0"}}

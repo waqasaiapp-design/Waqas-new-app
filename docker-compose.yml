@@ -1,0 +1,61 @@
+services:
+  waqas-zip-to-web:
+    build: .
+    container_name: waqas-zip-to-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATA_DIR: /data
+      APP_URL: ${APP_URL:-https://zip.example.com}
+      PUBLIC_BASE_DOMAIN: ${PUBLIC_BASE_DOMAIN:-}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-10737418240}
+      CHUNK_SIZE_BYTES: ${CHUNK_SIZE_BYTES:-5242880}
+      S3_ENDPOINT: ${S3_ENDPOINT:-http://minio:9000}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_BUCKET: ${S3_BUCKET:-waqas-zips}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-minioadmin}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-minioadmin123}
+      S3_FORCE_PATH_STYLE: "true"
+    volumes:
+      - waqas_data:/data
+      # Optional: mount Docker socket if enabling Dockerfile container builds on VPS
+      # - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - minio
+
+  minio:
+    image: minio/minio:latest
+    container_name: waqas-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:-minioadmin123}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: waqas-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - waqas-zip-to-web
+
+volumes:
+  waqas_data:
+  minio_data:
+  caddy_data:
+  caddy_config:

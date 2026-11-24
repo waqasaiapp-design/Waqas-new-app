@@ -1,0 +1,13 @@
+# Replace example.com with your real domain pointing A/AAAA records to your server.
+# For wildcard *.sites.example.com automatic HTTPS, configure a DNS-01 provider plugin in Caddy.
+
+zip.example.com {
+	reverse_proxy waqas-zip-to-web:3000
+}
+
+*.sites.example.com {
+	reverse_proxy waqas-zip-to-web:3000 {
+		header_up Host {host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}

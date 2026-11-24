@@ -1,0 +1,1 @@
+const http = require("http"); const ms = require("ms"); http.createServer((req, res) => { res.end("Yarn OK " + ms("2 days")); }).listen(process.env.PORT, "127.0.0.1");
